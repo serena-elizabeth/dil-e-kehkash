@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
 
   // Your admin email — only this account gets admin access
-  const ADMIN_EMAIL = 'your-email@gmail.com'
+  const ADMIN_EMAIL = 'serenaejacob@gmail.com'
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
