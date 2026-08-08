@@ -3,7 +3,8 @@ import { useNavigate, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   signInWithPopup, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword, linkWithCredential,
+  GithubAuthProvider
 } from 'firebase/auth'
 import { auth, googleProvider, githubProvider } from '../firebase'
 import { useAuth } from '../context/AuthContext'
@@ -31,15 +32,31 @@ export default function Login() {
     }
   }
 
-  const handleGithub = async () => {
-    try {
-      await signInWithPopup(auth, githubProvider)
-      toast.success('Welcome back')
-      navigate('/')
-    } catch (e) {
+ const handleGithub = async () => {
+  try {
+    await signInWithPopup(auth, githubProvider)
+    toast.success('Welcome back')
+    navigate('/')
+  } catch (e) {
+    if (e.code === 'auth/account-exists-with-different-credential') {
+      try {
+        // Get the pending GitHub credential
+        const pendingCred = GithubAuthProvider.credentialFromError(e)
+        // Sign in with Google first
+        toast('This email is linked to Google. Sign in with Google to link accounts.')
+        const googleResult = await signInWithPopup(auth, googleProvider)
+        // Link GitHub to the existing Google account
+        await linkWithCredential(googleResult.user, pendingCred)
+        toast.success('GitHub linked to your account')
+        navigate('/')
+      } catch {
+        toast.error('Could not link accounts. Try signing in with Google.')
+      }
+    } else {
       toast.error(getFriendlyError(e.code))
     }
   }
+}
 
   const handleEmail = async () => {
     if (!email || !password) { toast.error('Fill in all fields'); return }
