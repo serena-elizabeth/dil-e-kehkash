@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom pixelated gold cursor */
+*, *::before, *::after {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='0' y='0' width='4' height='4' fill='%23D4AF37'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23D4AF37'/%3E%3Crect x='8' y='8' width='4' height='4' fill='%23D4AF37'/%3E%3Crect x='4' y='8' width='4' height='4' fill='%23B8860B'/%3E%3C/svg%3E") 0 0, auto;
+  box-sizing: border-box;
+}
+
+a, button, [role="button"], input, select, textarea, label {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='4' y='0' width='4' height='4' fill='%23F0D080'/%3E%3Crect x='0' y='4' width='4' height='4' fill='%23F0D080'/%3E%3Crect x='4' y='4' width='4' height='4' fill='%23D4AF37'/%3E%3Crect x='8' y='4' width='4' height='4' fill='%23F0D080'/%3E%3Crect x='4' y='8' width='4' height='4' fill='%23F0D080'/%3E%3C/svg%3E") 8 8, pointer;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F0D080;
+}
+
+/* Base */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-obsidian text-white font-sans;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark body {
+  @apply bg-obsidian text-white;
+}
+
+/* Light mode */
+.light body {
+  @apply bg-cream text-ink;
+}
+
+/* Gold shimmer text effect */
+.gold-shimmer {
+  background: linear-gradient(90deg, #B8860B 0%, #D4AF37 40%, #F0D080 60%, #D4AF37 80%, #B8860B 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(17, 17, 17, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+}
+
+.light .glass-card {
+  background: rgba(250, 247, 240, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+/* Gold divider */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+}
+
+/* Page fade in */
+.page-enter {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Selection color */
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+  color: #F0D080;
+}

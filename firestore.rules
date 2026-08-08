@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Your admin UID — replace this after you first log in
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'your-email@gmail.com';
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Content collections: quotes, poems, articles, songs, photos, stories
+    match /{category}/{docId} {
+      // Anyone can read
+      allow read: if category in ['quotes','poems','articles','songs','photos','stories'];
+
+      // Only admin can create or delete
+      allow create, delete: if isAdmin();
+
+      // Signed-in users can update only likes and likedBy fields
+      allow update: if isSignedIn()
+        && category in ['quotes','poems','articles','songs','photos','stories']
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['likes', 'likedBy']);
+
+      // Comments subcollection
+      match /comments/{commentId} {
+        allow read: if true;
+
+        // Signed-in users can add comments
+        allow create: if isSignedIn()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string
+          && request.resource.data.text.size() <= 500
+          && request.resource.data.text.size() > 0;
+
+        // Only comment owner or admin can delete
+        allow delete: if isAdmin() || (isSignedIn() && resource.data.uid == request.auth.uid);
+
+        // No editing comments
+        allow update: if false;
+      }
+    }
+  }
+}
