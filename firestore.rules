@@ -4,7 +4,7 @@ service cloud.firestore {
 
     // Your admin UID — replace this after you first log in
     function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'your-email@gmail.com';
+      return request.auth != null && request.auth.token.email == 'serenaejacob@gmail.com';
     }
 
     function isSignedIn() {
